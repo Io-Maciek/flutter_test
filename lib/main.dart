@@ -31,16 +31,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final int sudokuSize = 3;
+  final int sudokuSize = 4;
 
   _MyHomePageState() {
     _plansza = _setKomorkiSudoku();
   }
 
-  var _plansza = Container();
+  GridView _plansza = GridView.count(crossAxisCount: 1);
   final List<Widget> _komorki = <Widget>[];
 
-  Container _setKomorkiSudoku() {
+  GridView _setKomorkiSudoku() {
     for (int i = 0; i < sudokuSize * sudokuSize; i++) {
       _komorki.add(SudokuPole((int i) {
         int ret = i;
@@ -54,16 +54,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     var grid = GridView.count(
-      childAspectRatio: 5.0,
+      padding: EdgeInsets.all(20.0) ,
+      childAspectRatio: sudokuSize/sudokuSize,
       mainAxisSpacing: 0.0,
       crossAxisSpacing: 0.0,
       crossAxisCount: sudokuSize,
       children: _komorki,
     );
 
-    return Container(
-      child: grid,
-    );
+    return grid;
   }
 
   void _incrementCounter() {
@@ -82,9 +81,22 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: _incrementCounter,
             child: const Text('Action 1')),
       ]),
-      body: GestureDetector(
+      body: Center(
+              child: _plansza),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: "Dodaj",
+        child: const Icon(Icons.dangerous),
+
+      ));
+  }
+}
+
+
+
+/*GestureDetector(
           onHorizontalDragEnd: (d) {
-            if((d.primaryVelocity?.toInt()??0)>0){
+/*            if((d.primaryVelocity?.toInt()??0)>0){
               print("W lewo");
             }
             if((d.primaryVelocity?.toInt()??0)<0){
@@ -99,14 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
             if((d.primaryVelocity?.toInt()??0)<0){
               print("W doł");
-            }
+            }*/
           },
-          child: Center(child: _plansza)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: "Dodaj",
-        child: const Icon(Icons.dangerous),
-      ),
-    );
-  }
-}
+          child: */
