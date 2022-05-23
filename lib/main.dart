@@ -16,73 +16,92 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: '///Elo///'),
+      home: const MyHomePage(title: 'Elo'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-  
+
   final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-
 class _MyHomePageState extends State<MyHomePage> {
-
   final int sudokuSize = 3;
 
-  _MyHomePageState(){
+  _MyHomePageState() {
     _plansza = _setKomorkiSudoku();
   }
 
   var _plansza = Container();
-  var _komorki = <Widget>[];
+  final List<Widget> _komorki = <Widget>[];
 
-  Container _setKomorkiSudoku(){
-
-    for(int i=0;i<sudokuSize*sudokuSize;i++){
-      _komorki.add(SudokuPole((int i){
+  Container _setKomorkiSudoku() {
+    for (int i = 0; i < sudokuSize * sudokuSize; i++) {
+      _komorki.add(SudokuPole((int i) {
         int ret = i;
-        if(i<9){
-          ret=ret+1;
-        }else ret =1;
+        if (i < 9) {
+          ret = ret + 1;
+        } else {
+          ret = 1;
+        }
         return ret;
       }));
     }
 
-    var grid= GridView.count(
+    var grid = GridView.count(
       childAspectRatio: 5.0,
       mainAxisSpacing: 0.0,
       crossAxisSpacing: 0.0,
       crossAxisCount: sudokuSize,
-      children: _komorki,);
-
+      children: _komorki,
+    );
 
     return Container(
-      child: grid,);
+      child: grid,
+    );
   }
 
-  void _incrementCounter(){
-
+  void _incrementCounter() {
+    print("Kliknięto COŚ na pewno");
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child:  _plansza
+    final ButtonStyle style =
+        TextButton.styleFrom(primary: Theme.of(context).colorScheme.onPrimary);
 
-      ),
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title), actions: [
+        TextButton(
+            style: style,
+            onPressed: _incrementCounter,
+            child: const Text('Action 1')),
+      ]),
+      body: GestureDetector(
+          onHorizontalDragEnd: (d) {
+            if((d.primaryVelocity?.toInt()??0)>0){
+              print("W lewo");
+            }
+            if((d.primaryVelocity?.toInt()??0)<0){
+              print("W prawo");
+            }
+          },
+          onVerticalDragEnd: (d) {
+            if((d.primaryVelocity?.toInt()??0)>0){
+              print("W górę");
+            }
+
+
+            if((d.primaryVelocity?.toInt()??0)<0){
+              print("W doł");
+            }
+          },
+          child: Center(child: _plansza)),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: "Dodaj",
