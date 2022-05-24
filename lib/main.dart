@@ -72,20 +72,43 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  String _swipeDirection ="placeholder";
+
   OrientationBuilder _buildPlansze() {
     var grid = OrientationBuilder(builder: (context, orientation) {
       _komorkiObrot(orientation);
-      return GridView.count(
-          physics: const NeverScrollableScrollPhysics(),
-          scrollDirection: orientation == Orientation.landscape
-              ? Axis.horizontal
-              : Axis.vertical,
-          padding: const EdgeInsets.all(20.0),
-          childAspectRatio: sudokuSize / sudokuSize,
-          mainAxisSpacing: 0.0,
-          crossAxisSpacing: 0.0,
-          crossAxisCount: sudokuSize,
-          children: _komorki.expand((element) => element).toList());
+
+      var grid = Expanded(
+          child: GridView.count(
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: orientation == Orientation.landscape
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              padding: const EdgeInsets.all(20.0),
+              childAspectRatio: sudokuSize / sudokuSize,
+              mainAxisSpacing: 0.0,
+              crossAxisSpacing: 0.0,
+              crossAxisCount: sudokuSize,
+              children: _komorki.expand((element) => element).toList()));
+
+      var text = Text(_swipeDirection,
+        textAlign: TextAlign.center,
+      );
+
+      if(orientation==Orientation.portrait){
+        return Column(children: [
+          grid,
+          text,
+        ]);
+      }else{
+        return Row(children: [
+          grid,
+          text,
+        ]);
+      }
+
+
+
     });
 
     return grid;
@@ -103,16 +126,19 @@ class _MyHomePageState extends State<MyHomePage> {
     return GestureDetector(
         onHorizontalDragEnd: (d) {
           if (d.velocity.pixelsPerSecond.dy < -250) {
-            print("W górę");
+            setState((){_swipeDirection="/\\";});
           } else if (d.velocity.pixelsPerSecond.dy > 250) {
-            print("W dół");
+            setState((){_swipeDirection="\\//";});
+
           }
         },
         onVerticalDragEnd: (d) {
+          print("object");
+
           if (d.velocity.pixelsPerSecond.dx < -500) {
-            print("W lewo");
+            print("W LEWOr");
           } else if (d.velocity.pixelsPerSecond.dx > 500) {
-            print("W prawo");
+            setState((){_swipeDirection=">";});
           }
         },
         child: Scaffold(
@@ -122,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: _incrementCounter,
                   child: const Text('Action 1')),
             ]),
-            body: Center(child: _plansza),
+            body: _plansza,
             floatingActionButton: FloatingActionButton(
               onPressed: _incrementCounter,
               tooltip: "Dodaj",
@@ -130,24 +156,3 @@ class _MyHomePageState extends State<MyHomePage> {
             )));
   }
 }
-
-/*GestureDetector(
-          onHorizontalDragEnd: (d) {
-/*            if((d.primaryVelocity?.toInt()??0)>0){
-              print("W lewo");
-            }
-            if((d.primaryVelocity?.toInt()??0)<0){
-              print("W prawo");
-            }
-          },
-          onVerticalDragEnd: (d) {
-            if((d.primaryVelocity?.toInt()??0)>0){
-              print("W górę");
-            }
-
-
-            if((d.primaryVelocity?.toInt()??0)<0){
-              print("W doł");
-            }*/
-          },
-          child: */
