@@ -1,12 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:my_first_flutter/SudokuPole.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key) {}
 
   // This widget is the root of your application.
   @override
@@ -16,15 +18,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: 'Elo'),
+      home: MyHomePage(title: 'Elo'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
+
+  MyHomePage({Key? key, required this.title}) : super(key: key) {}
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -32,15 +34,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final int sudokuSize = 4;
+  List<SudokuPole> _komorki = <SudokuPole>[];
 
   _MyHomePageState() {
-    _plansza = _setKomorkiSudoku();
-  }
-
-  GridView _plansza = GridView.count(crossAxisCount: 1);
-  final List<Widget> _komorki = <Widget>[];
-
-  GridView _setKomorkiSudoku() {
     for (int i = 0; i < sudokuSize * sudokuSize; i++) {
       _komorki.add(SudokuPole((int i) {
         int ret = i;
@@ -53,14 +49,29 @@ class _MyHomePageState extends State<MyHomePage> {
       }));
     }
 
-    var grid = GridView.count(
-      padding: EdgeInsets.all(20.0) ,
-      childAspectRatio: sudokuSize/sudokuSize,
-      mainAxisSpacing: 0.0,
-      crossAxisSpacing: 0.0,
-      crossAxisCount: sudokuSize,
-      children: _komorki,
-    );
+    _plansza = _buildPlansze();
+  }
+
+  var _plansza = OrientationBuilder(builder: (c, b) {
+    return const Text("placeholder");
+  });
+
+
+  OrientationBuilder _buildPlansze() {
+    var grid = OrientationBuilder(builder: (context, orientation) {
+      return GridView.count(
+        physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: orientation == Orientation.landscape
+            ? Axis.horizontal
+            : Axis.vertical,
+        padding: const EdgeInsets.all(20.0),
+        childAspectRatio: sudokuSize / sudokuSize,
+        mainAxisSpacing: 0.0,
+        crossAxisSpacing: 0.0,
+        crossAxisCount: sudokuSize,
+        children: _komorki,//transpozycja przy zmianie ekranu
+      );
+    });
 
     return grid;
   }
@@ -75,24 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
         TextButton.styleFrom(primary: Theme.of(context).colorScheme.onPrimary);
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title), actions: [
-        TextButton(
-            style: style,
-            onPressed: _incrementCounter,
-            child: const Text('Action 1')),
-      ]),
-      body: Center(
-              child: _plansza),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: "Dodaj",
-        child: const Icon(Icons.dangerous),
-
-      ));
+        appBar: AppBar(title: Text(widget.title), actions: [
+          TextButton(
+              style: style,
+              onPressed: _incrementCounter,
+              child: const Text('Action 1')),
+        ]),
+        body: Center(child: _plansza),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: "Dodaj",
+          child: const Icon(Icons.dangerous),
+        ));
   }
 }
-
-
 
 /*GestureDetector(
           onHorizontalDragEnd: (d) {
