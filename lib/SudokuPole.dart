@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class SudokuPole extends StatefulWidget {
   var _onPress = (int _v) => 0;
-  int _value = 0;
+  int value = 0;
 
   int W = 0;
 
@@ -12,8 +12,7 @@ class SudokuPole extends StatefulWidget {
     _onPress = onPress;
 
     var rng = Random();
-    _value = 1 + rng.nextInt(10);
-    W = _value;
+    value = 1 + rng.nextInt(10);
   }
 
   @override
@@ -23,7 +22,7 @@ class SudokuPole extends StatefulWidget {
 class SudokuPoleDynamic extends State<SudokuPole> {
   void sudokuButtonPressed() {
     setState(() {
-      widget._value = widget._onPress(widget._value);
+      widget.value = widget._onPress(widget.value);
     });
   }
 
@@ -35,12 +34,13 @@ class SudokuPoleDynamic extends State<SudokuPole> {
           Container(
             decoration: BoxDecoration(
                 color: Colors.black12,
+                borderRadius: BorderRadius.circular(8.0),
                 border: Border.all(
                   color: Colors.black,
                   width: 2.0,
                 )),
           ),
-          Text('${widget._value}',
+          Text('${widget.value}',
               textAlign: TextAlign.center,
               style: const TextStyle(
                   color: Colors.black,
