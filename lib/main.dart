@@ -1,15 +1,12 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:my_first_flutter/SudokuPole.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key) {}
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -19,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: MyHomePage(title: 'Elo'),
+      home: const MyHomePage(title: 'Elo'),
     );
   }
 }
@@ -27,7 +24,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   final String title;
 
-  MyHomePage({Key? key, required this.title}) : super(key: key) {}
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -35,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final int sudokuSize = 4;
-  List<List<SudokuPole>> _komorki = <List<SudokuPole>>[];
+  final List<List<SudokuPole>> _komorki = <List<SudokuPole>>[];
 
   _MyHomePageState() {
     for (int i = 0; i < sudokuSize; i++) {
@@ -60,10 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return const Text("placeholder");
   });
 
-  Orientation pre=Orientation.landscape;
+  Orientation pre = Orientation.landscape;
 
   void _komorkiObrot(Orientation next) {
-    if(pre!=next) {
+    if (pre != next) {
       for (int i = 0; i < sudokuSize; i++) {
         for (int j = i; j < sudokuSize; j++) {
           var pre = _komorki[i][j].value;
@@ -76,21 +73,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   OrientationBuilder _buildPlansze() {
-    var grid = OrientationBuilder(
-        builder: (context, orientation) {
-          _komorkiObrot(orientation);
+    var grid = OrientationBuilder(builder: (context, orientation) {
+      _komorkiObrot(orientation);
       return GridView.count(
-        physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: orientation == Orientation.landscape
-            ? Axis.horizontal
-            : Axis.vertical,
-        padding: const EdgeInsets.all(20.0),
-        childAspectRatio: sudokuSize / sudokuSize,
-        mainAxisSpacing: 0.0,
-        crossAxisSpacing: 0.0,
-        crossAxisCount: sudokuSize,
-        children: _komorki.expand((element) => element).toList()
-      );
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: orientation == Orientation.landscape
+              ? Axis.horizontal
+              : Axis.vertical,
+          padding: const EdgeInsets.all(20.0),
+          childAspectRatio: sudokuSize / sudokuSize,
+          mainAxisSpacing: 0.0,
+          crossAxisSpacing: 0.0,
+          crossAxisCount: sudokuSize,
+          children: _komorki.expand((element) => element).toList());
     });
 
     return grid;

@@ -6,8 +6,6 @@ class SudokuPole extends StatefulWidget {
   var _onPress = (int _v) => 0;
   int value = 0;
 
-  int W = 0;
-
   SudokuPole(int Function(int _v) onPress, {Key? key}) : super(key: key) {
     _onPress = onPress;
 
