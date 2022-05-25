@@ -42,7 +42,11 @@ class MainGridState extends State<MainGrid> {
 
   getSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
-    temp = prefs.getString("temp")==null?"BRAK":(prefs.getString("temp") as String);
+    setState(() {
+      temp = prefs.getString("temp") == null
+          ? "BRAK"
+          : (prefs.getString("temp") as String);
+    });
   }
 
   Orientation pre = Orientation.landscape;
@@ -81,7 +85,6 @@ class MainGridState extends State<MainGrid> {
               crossAxisCount: sudokuSize,
               children: _komorki.expand((element) => element).toList()));
 
-
       var text = Text(
         '${temp}: $_swipeDirection',
         textAlign: TextAlign.center,
@@ -108,34 +111,35 @@ class MainGridState extends State<MainGrid> {
       });
     }
 
-      return GestureDetector(
-        onDoubleTap: zapisz,
-        onHorizontalDragEnd: (d) {
-          if (d.velocity.pixelsPerSecond.dy < -250) {
-            setState(() {
-              _swipeDirection = "prawo";
-            });
-          } else if (d.velocity.pixelsPerSecond.dy > 250) {
-            setState(() {
-              _swipeDirection = "lewo";
-            });
-          }
-        },
-        onVerticalDragEnd: (d) {
-          if (d.velocity.pixelsPerSecond.dx < -500) {
-            setState(() {
-              _swipeDirection = "dół";
-            });
-          } else if (d.velocity.pixelsPerSecond.dx > 500) {
-            setState(() {
-              _swipeDirection = "góra";
-            });
-          }
-        },
-        child
-            :
-        grid
-        ,
-      );
+
+
+
+    return GestureDetector(
+      onDoubleTap: zapisz,
+
+      onHorizontalDragEnd: (d) {
+        if (d.velocity.pixelsPerSecond.dx < -250) {
+          setState(() {
+            _swipeDirection = "prawo";
+          });
+        } else if (d.velocity.pixelsPerSecond.dx > 250) {
+          setState(() {
+            _swipeDirection = "lewo";
+          });
+        }
+      },
+      onVerticalDragEnd: (d) {
+        if (d.velocity.pixelsPerSecond.dy > -500) {
+          setState(() {
+            _swipeDirection = "dół";
+          });
+        } else if (d.velocity.pixelsPerSecond.dy < 500) {
+          setState(() {
+            _swipeDirection = "góra";
+          });
+        }
+      },
+      child: grid,
+    );
   }
 }
