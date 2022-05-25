@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:my_first_flutter/Movement.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'SudokuPole.dart';
@@ -17,26 +18,25 @@ class MainGridState extends State<MainGrid> {
   final _komorki = <List<SudokuPole>>[];
   late SharedPreferences prefs;
   String temp = "";
+  String _swipeDirection = "placeholder";
+  Orientation pre = Orientation.landscape;
+
+  int R = 2;
+  int C =2;
 
   MainGridState() {
-    getSharedPreferences();
-
     for (int i = 0; i < sudokuSize; i++) {
       var tempRow = <SudokuPole>[];
       for (int j = 0; j < sudokuSize; j++) {
-        tempRow.add(SudokuPole((int i) {
-          int ret = i;
-          if (i < 9) {
-            ret = ret + 1;
-          } else {
-            ret = 1;
-          }
-          return ret;
-        }));
+
+        if(i==R && j==C){
+          tempRow.add(SudokuPole.set(1));
+        }else {
+          tempRow.add(SudokuPole());
+        }
       }
       _komorki.add(tempRow);
     }
-
     getSharedPreferences();
   }
 
@@ -49,7 +49,6 @@ class MainGridState extends State<MainGrid> {
     });
   }
 
-  Orientation pre = Orientation.landscape;
 
   void _komorkiObrot(Orientation next) {
     if (pre != next) {
@@ -66,7 +65,6 @@ class MainGridState extends State<MainGrid> {
     }
   }
 
-  String _swipeDirection = "placeholder";
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +81,8 @@ class MainGridState extends State<MainGrid> {
               mainAxisSpacing: 0.0,
               crossAxisSpacing: 0.0,
               crossAxisCount: sudokuSize,
-              children: _komorki.expand((element) => element).toList()));
+              children: _komorki.expand((element) => element).toList()
+          ));
 
       var text = Text(
         '${temp}: $_swipeDirection',
@@ -119,10 +118,14 @@ class MainGridState extends State<MainGrid> {
 
       onHorizontalDragEnd: (d) {
         if (d.velocity.pixelsPerSecond.dx < -250) {
+          move(Movement.prawo);
+
           setState(() {
             _swipeDirection = "prawo";
           });
         } else if (d.velocity.pixelsPerSecond.dx > 250) {
+          move(Movement.lewo);
+
           setState(() {
             _swipeDirection = "lewo";
           });
@@ -130,10 +133,13 @@ class MainGridState extends State<MainGrid> {
       },
       onVerticalDragEnd: (d) {
         if (d.velocity.pixelsPerSecond.dy > -500) {
+          move(Movement.dol);
           setState(() {
             _swipeDirection = "dół";
           });
         } else if (d.velocity.pixelsPerSecond.dy < 500) {
+          move(Movement.gora);
+
           setState(() {
             _swipeDirection = "góra";
           });
@@ -142,4 +148,55 @@ class MainGridState extends State<MainGrid> {
       child: grid,
     );
   }
+
+  void move(Movement movement){
+    switch(movement){
+
+      case Movement.gora:
+        _moveUp();
+        break;
+      case Movement.dol:
+        _moveDown();
+        break;
+      case Movement.lewo:
+          _moveLeft();
+        break;
+      case Movement.prawo:
+          _moveRight();
+        break;
+    }
+  }
+
+  void _moveUp(){
+    if(R>0) {
+      _komorki[R][C] = SudokuPole.set(0);
+      R -= 1;
+      _komorki[R][C] = SudokuPole.set(1);
+    }
+  }
+
+  void _moveDown(){
+    if(R<sudokuSize-1) {
+      _komorki[R][C] = SudokuPole.set(0);
+      R += 1;
+      _komorki[R][C] = SudokuPole.set(1);
+    }
+  }
+
+  void _moveLeft(){
+    if(C<sudokuSize-1) {
+      _komorki[R][C] = SudokuPole.set(0);
+      C += 1;
+      _komorki[R][C] = SudokuPole.set(1);
+    }
+  }
+
+  void _moveRight(){
+    if(C>0) {
+      _komorki[R][C] = SudokuPole.set(0);
+      C -= 1;
+      _komorki[R][C] = SudokuPole.set(1);
+    }
+  }
+
 }

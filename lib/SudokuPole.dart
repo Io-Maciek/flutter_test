@@ -1,50 +1,48 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 class SudokuPole extends StatefulWidget {
-  var _onPress = (int _v) => 0;
+  //var _onPress = (int _v) => 0;
   int value = 0;
+  SudokuPoleDynamic child = SudokuPoleDynamic();
 
-  SudokuPole(int Function(int _v) onPress, {Key? key}) : super(key: key) {
-    _onPress = onPress;
+  SudokuPole({Key? key}) : super(key: key) {
+    //_onPress = onPress;
+    child = SudokuPoleDynamic();
+  }
 
-    var rng = Random();
-    value = 1 + rng.nextInt(10);
+  SudokuPole.set(int setValue, {Key? key}) : super(key: key) {
+    value = setValue;
+    child = SudokuPoleDynamic();
   }
 
   @override
-  State<StatefulWidget> createState() => SudokuPoleDynamic();
+  State<StatefulWidget> createState() => SudokuPoleDynamic();//child;
 }
 
 class SudokuPoleDynamic extends State<SudokuPole> {
-  void sudokuButtonPressed() {
-    setState(() {
-      widget.value = widget._onPress(widget.value);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: sudokuButtonPressed,
+        //onTap: sudokuButtonPressed,
         child: Stack(alignment: Alignment.center, children: [
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.black12,
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                )),
-          ),
-          Text('${widget.value}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 21,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "ComicSans")),
-        ]));
+      Container(
+        decoration: BoxDecoration(
+            color: Colors.black12,
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(
+              color: Colors.black,
+              width: 2.0,
+            )),
+      ),
+      Text('${widget.value}',
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              color: Colors.black,
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
+              fontFamily: "ComicSans")),
+    ]));
   }
 }
