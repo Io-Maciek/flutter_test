@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:my_first_flutter/Movement.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,16 +23,15 @@ class MainGridState extends State<MainGrid> {
   Orientation pre = Orientation.landscape;
 
   int R = 2;
-  int C =2;
+  int C = 2;
 
   MainGridState() {
     for (int i = 0; i < sudokuSize; i++) {
       var tempRow = <SudokuPole>[];
       for (int j = 0; j < sudokuSize; j++) {
-
-        if(i==R && j==C){
+        if (i == R && j == C) {
           tempRow.add(SudokuPole.set('T'));
-        }else {
+        } else {
           tempRow.add(SudokuPole());
         }
       }
@@ -48,7 +48,6 @@ class MainGridState extends State<MainGrid> {
           : (prefs.getString("temp") as String);
     });
   }
-
 
   void _komorkiObrot(Orientation next) {
     if (pre != next) {
@@ -68,7 +67,6 @@ class MainGridState extends State<MainGrid> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     var grid = OrientationBuilder(builder: (context, orientation) {
@@ -84,8 +82,7 @@ class MainGridState extends State<MainGrid> {
               mainAxisSpacing: 0.0,
               crossAxisSpacing: 0.0,
               crossAxisCount: sudokuSize,
-              children: _komorki.expand((element) => element).toList()
-          ));
+              children: _komorki.expand((element) => element).toList()));
 
       var text = Text(
         '${temp}: $_swipeDirection',
@@ -113,122 +110,153 @@ class MainGridState extends State<MainGrid> {
       });
     }
 
-
-
-
-    return GestureDetector(
-      onDoubleTap: zapisz,
-
-      // poruszanie horyzontalnie
-      onHorizontalDragEnd: (d) {
-
-        // ruch w prawo
-        if (d.velocity.pixelsPerSecond.dx < -250) {
-
-          // gdy poziomo to do góry
-          if(pre == Orientation.landscape){
-            move(Movement.gora);
-          }else { // gdy pionowo to w prawo
-            move(Movement.prawo);
+    return RawKeyboardListener(
+        focusNode: FocusNode(),
+        autofocus: true,
+        onKey: (event) {
+          if (event.runtimeType == RawKeyDownEvent) {
+            if (event.data.logicalKey == LogicalKeyboardKey.arrowLeft ||
+                event.data.logicalKey == LogicalKeyboardKey.keyA) {
+              if (pre == Orientation.landscape) {
+                move(Movement.gora);
+              } else {
+                // gdy pionowo to w prawo
+                move(Movement.prawo);
+              }
+            } else if (event.data.logicalKey == LogicalKeyboardKey.arrowRight ||
+                event.data.logicalKey == LogicalKeyboardKey.keyD) {
+              if (pre == Orientation.landscape) {
+                move(Movement.dol);
+              } else {
+                // gdy pionowo to w lewo
+                move(Movement.lewo);
+              }
+            } else if (event.data.logicalKey == LogicalKeyboardKey.arrowUp ||
+                event.data.logicalKey == LogicalKeyboardKey.keyW) {
+              if (pre == Orientation.landscape) {
+                move(Movement.prawo);
+              } else {
+                move(Movement.gora);
+              }
+            } else if (event.data.logicalKey == LogicalKeyboardKey.arrowDown ||
+                event.data.logicalKey == LogicalKeyboardKey.keyS) {
+              if (pre == Orientation.landscape) {
+                move(Movement.lewo);
+              } else {
+                move(Movement.dol);
+              }
+            }
           }
+        },
+        child: GestureDetector(
+          onDoubleTap: zapisz,
 
-          // wypisanie na ekran ruchu
-          setState(() {
-            _swipeDirection = "prawo";
-          });
+          // poruszanie horyzontalnie
+          onHorizontalDragEnd: (d) {
+            // ruch w prawo
+            if (d.velocity.pixelsPerSecond.dx < -250) {
+              // gdy poziomo to do góry
+              if (pre == Orientation.landscape) {
+                move(Movement.gora);
+              } else {
+                // gdy pionowo to w prawo
+                move(Movement.prawo);
+              }
 
-          // ruch w lewo
-        } else if (d.velocity.pixelsPerSecond.dx > 250) {
+              // wypisanie na ekran ruchu
+              setState(() {
+                _swipeDirection = "prawo";
+              });
 
-          // gdy poziomo to w dół
-          if(pre == Orientation.landscape){
-            move(Movement.dol);
-          }else { // gdy pionowo to w lewo
-            move(Movement.lewo);
-          }
+              // ruch w lewo
+            } else if (d.velocity.pixelsPerSecond.dx > 250) {
+              // gdy poziomo to w dół
+              if (pre == Orientation.landscape) {
+                move(Movement.dol);
+              } else {
+                // gdy pionowo to w lewo
+                move(Movement.lewo);
+              }
 
-          setState(() {
-            _swipeDirection = "lewo";
-          });
-        }
-      },
-      onVerticalDragEnd: (d) {
-        if (d.velocity.pixelsPerSecond.dy > -500) {
+              setState(() {
+                _swipeDirection = "lewo";
+              });
+            }
+          },
+          onVerticalDragEnd: (d) {
+            if (d.velocity.pixelsPerSecond.dy > -500) {
+              if (pre == Orientation.landscape) {
+                move(Movement.lewo);
+              } else {
+                move(Movement.dol);
+              }
+              setState(() {
+                _swipeDirection = "dół";
+              });
+            } else if (d.velocity.pixelsPerSecond.dy < 500) {
+              if (pre == Orientation.landscape) {
+                move(Movement.prawo);
+              } else {
+                move(Movement.gora);
+              }
 
-          if(pre == Orientation.landscape){
-            move(Movement.lewo);
-          }else {
-            move(Movement.dol);
-          }
-          setState(() {
-            _swipeDirection = "dół";
-          });
-
-        } else if (d.velocity.pixelsPerSecond.dy < 500) {
-
-          if(pre == Orientation.landscape){
-            move(Movement.prawo);
-          }else {
-            move(Movement.gora);
-          }
-
-          setState(() {
-            _swipeDirection = "góra";
-          });
-        }
-      },
-      child: grid,
-    );
+              setState(() {
+                _swipeDirection = "góra";
+              });
+            }
+          },
+          child: grid,
+        ));
   }
 
-  void move(Movement movement){
-    switch(movement){
-
-      case Movement.gora:
-        _moveUp();
-        break;
-      case Movement.dol:
-        _moveDown();
-        break;
-      case Movement.lewo:
+  void move(Movement movement) {
+    setState(() {
+      switch (movement) {
+        case Movement.gora:
+          _moveUp();
+          break;
+        case Movement.dol:
+          _moveDown();
+          break;
+        case Movement.lewo:
           _moveLeft();
-        break;
-      case Movement.prawo:
+          break;
+        case Movement.prawo:
           _moveRight();
-        break;
-    }
+          break;
+      }
+    });
   }
 
-  void _moveUp(){
-    if(R>0) {
+  void _moveUp() {
+    if (R > 0) {
       _komorki[R][C] = SudokuPole.set('');
       R -= 1;
       _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
-  void _moveDown(){
-    if(R<sudokuSize-1) {
+  void _moveDown() {
+    if (R < sudokuSize - 1) {
       _komorki[R][C] = SudokuPole.set('');
       R += 1;
       _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
-  void _moveLeft(){
-    if(C<sudokuSize-1) {
+  void _moveLeft() {
+    if (C < sudokuSize - 1) {
       _komorki[R][C] = SudokuPole.set('');
       C += 1;
       _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
-  void _moveRight(){
-    if(C>0) {
+  void _moveRight() {
+    if (C > 0) {
       _komorki[R][C] = SudokuPole.set('');
       C -= 1;
       _komorki[R][C] = SudokuPole.set('T');
     }
   }
-
 }
