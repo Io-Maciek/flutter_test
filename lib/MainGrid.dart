@@ -30,7 +30,7 @@ class MainGridState extends State<MainGrid> {
       for (int j = 0; j < sudokuSize; j++) {
 
         if(i==R && j==C){
-          tempRow.add(SudokuPole.set(1));
+          tempRow.add(SudokuPole.set('T'));
         }else {
           tempRow.add(SudokuPole());
         }
@@ -53,6 +53,9 @@ class MainGridState extends State<MainGrid> {
   void _komorkiObrot(Orientation next) {
     if (pre != next) {
       print("OBRÓT");
+      int t = R;
+      R = C;
+      C = t;
 
       for (int i = 0; i < sudokuSize; i++) {
         for (int j = i; j < sudokuSize; j++) {
@@ -116,15 +119,33 @@ class MainGridState extends State<MainGrid> {
     return GestureDetector(
       onDoubleTap: zapisz,
 
+      // poruszanie horyzontalnie
       onHorizontalDragEnd: (d) {
-        if (d.velocity.pixelsPerSecond.dx < -250) {
-          move(Movement.prawo);
 
+        // ruch w prawo
+        if (d.velocity.pixelsPerSecond.dx < -250) {
+
+          // gdy poziomo to do góry
+          if(pre == Orientation.landscape){
+            move(Movement.gora);
+          }else { // gdy pionowo to w prawo
+            move(Movement.prawo);
+          }
+
+          // wypisanie na ekran ruchu
           setState(() {
             _swipeDirection = "prawo";
           });
+
+          // ruch w lewo
         } else if (d.velocity.pixelsPerSecond.dx > 250) {
-          move(Movement.lewo);
+
+          // gdy poziomo to w dół
+          if(pre == Orientation.landscape){
+            move(Movement.dol);
+          }else { // gdy pionowo to w lewo
+            move(Movement.lewo);
+          }
 
           setState(() {
             _swipeDirection = "lewo";
@@ -133,12 +154,23 @@ class MainGridState extends State<MainGrid> {
       },
       onVerticalDragEnd: (d) {
         if (d.velocity.pixelsPerSecond.dy > -500) {
-          move(Movement.dol);
+
+          if(pre == Orientation.landscape){
+            move(Movement.lewo);
+          }else {
+            move(Movement.dol);
+          }
           setState(() {
             _swipeDirection = "dół";
           });
+
         } else if (d.velocity.pixelsPerSecond.dy < 500) {
-          move(Movement.gora);
+
+          if(pre == Orientation.landscape){
+            move(Movement.prawo);
+          }else {
+            move(Movement.gora);
+          }
 
           setState(() {
             _swipeDirection = "góra";
@@ -169,33 +201,33 @@ class MainGridState extends State<MainGrid> {
 
   void _moveUp(){
     if(R>0) {
-      _komorki[R][C] = SudokuPole.set(0);
+      _komorki[R][C] = SudokuPole.set('');
       R -= 1;
-      _komorki[R][C] = SudokuPole.set(1);
+      _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
   void _moveDown(){
     if(R<sudokuSize-1) {
-      _komorki[R][C] = SudokuPole.set(0);
+      _komorki[R][C] = SudokuPole.set('');
       R += 1;
-      _komorki[R][C] = SudokuPole.set(1);
+      _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
   void _moveLeft(){
     if(C<sudokuSize-1) {
-      _komorki[R][C] = SudokuPole.set(0);
+      _komorki[R][C] = SudokuPole.set('');
       C += 1;
-      _komorki[R][C] = SudokuPole.set(1);
+      _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
   void _moveRight(){
     if(C>0) {
-      _komorki[R][C] = SudokuPole.set(0);
+      _komorki[R][C] = SudokuPole.set('');
       C -= 1;
-      _komorki[R][C] = SudokuPole.set(1);
+      _komorki[R][C] = SudokuPole.set('T');
     }
   }
 
