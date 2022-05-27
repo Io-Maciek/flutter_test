@@ -1,6 +1,6 @@
 {
-    "name": "my_first_flutter",
-    "short_name": "my_first_flutter",
+    "name": "2048 - preview",
+    "short_name": "2048p",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

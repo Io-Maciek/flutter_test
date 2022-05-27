@@ -19,8 +19,8 @@ class MainGridState extends State<MainGrid> {
   final _komorki = <List<SudokuPole>>[];
   late SharedPreferences prefs;
   String temp = "";
-  String _swipeDirection = "placeholder";
-  Orientation pre = Orientation.landscape;
+
+  Orientation presentOrientation = Orientation.landscape;
 
   int R = 2;
   int C = 2;
@@ -50,7 +50,7 @@ class MainGridState extends State<MainGrid> {
   }
 
   void _komorkiObrot(Orientation next) {
-    if (pre != next) {
+    if (presentOrientation != next) {
       print("OBRÓT");
       int t = R;
       R = C;
@@ -63,7 +63,7 @@ class MainGridState extends State<MainGrid> {
           _komorki[j][i].value = pre;
         }
       }
-      pre = next;
+      presentOrientation = next;
     }
   }
 
@@ -160,7 +160,7 @@ class MainGridState extends State<MainGrid> {
     setState(() {
       switch (movement) {
         case Movement.gora:
-          if (pre == Orientation.landscape) {
+          if (presentOrientation == Orientation.landscape) {
             _moveRight();
           } else {
             _moveUp();
@@ -168,7 +168,7 @@ class MainGridState extends State<MainGrid> {
 
           break;
         case Movement.dol:
-          if (pre == Orientation.landscape) {
+          if (presentOrientation == Orientation.landscape) {
             _moveLeft();
           } else {
             _moveDown();
@@ -176,7 +176,7 @@ class MainGridState extends State<MainGrid> {
 
           break;
         case Movement.lewo:
-          if (pre == Orientation.landscape) {
+          if (presentOrientation == Orientation.landscape) {
             _moveDown();
           } else {
             // gdy pionowo to w lewo
@@ -185,7 +185,7 @@ class MainGridState extends State<MainGrid> {
 
           break;
         case Movement.prawo:
-          if (pre == Orientation.landscape) {
+          if (presentOrientation == Orientation.landscape) {
             _moveUp();
           } else {
             // gdy pionowo to w prawo

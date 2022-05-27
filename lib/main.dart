@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_first_flutter/MainGrid.dart';
-import 'package:my_first_flutter/SudokuPole.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Eluwa',
+      title: '2048 - preview',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: 'Elo'),
+      home: const MyHomePage(title: '2048'),
     );
   }
 }
@@ -32,27 +31,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void _incrementCounter() {
-    print("Kliknięto COŚ na pewno");
-  }
-
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle style =
-        TextButton.styleFrom(primary: Theme.of(context).colorScheme.onPrimary);
 
     return Scaffold(
-        appBar: AppBar(title: Text(widget.title), actions: [
-          TextButton(
-              style: style,
-              onPressed: _incrementCounter,
-              child: const Text('Action 1')),
-        ]),
-        body: MainGrid(),
-        floatingActionButton: FloatingActionButton(
+      appBar: AppBar(
+        title: Text(widget.title),
+        /*actions: [
+        TextButton(
+            style: TextButton.styleFrom(primary: Theme.of(context).colorScheme.onPrimary),
+            onPressed: _incrementCounter,
+            child: const Text('Action 1')),
+      ]*/
+      ),
+      body: const MainGrid(),
+      /* floatingActionButton: FloatingActionButton(
           onPressed: _incrementCounter,
           tooltip: "Dodaj",
           child: const Icon(Icons.dangerous),
-        ));
+        )*/
+    );
   }
 }
