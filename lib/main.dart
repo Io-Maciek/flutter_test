@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '2048 - preview',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        scaffoldBackgroundColor: Colors.orange[50],
+        primarySwatch: Colors.yellow,
       ),
       home: const MyHomePage(title: '2048'),
     );

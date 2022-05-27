@@ -23,7 +23,7 @@ class SudokuPoleDynamic extends State<SudokuPole> {
     return Stack(alignment: Alignment.center, children: [
       Container(
         decoration: BoxDecoration(
-            color: Colors.black12,
+            color: Colors.orange[200],
             borderRadius: BorderRadius.circular(8.0),
             border: Border.all(
               color: Colors.black,
