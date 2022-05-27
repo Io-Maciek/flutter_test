@@ -195,7 +195,6 @@ class MainGridState extends State<MainGrid> {
           break;
       }
 
-      after_move();
     });
   }
 
@@ -204,6 +203,8 @@ class MainGridState extends State<MainGrid> {
       _komorki[R][C] = SudokuPole.set('');
       R -= 1;
       _komorki[R][C] = SudokuPole.set('T');
+      after_move();
+
     }
   }
 
@@ -212,6 +213,8 @@ class MainGridState extends State<MainGrid> {
       _komorki[R][C] = SudokuPole.set('');
       R += 1;
       _komorki[R][C] = SudokuPole.set('T');
+      after_move();
+
     }
   }
 
@@ -220,6 +223,8 @@ class MainGridState extends State<MainGrid> {
       _komorki[R][C] = SudokuPole.set('');
       C += 1;
       _komorki[R][C] = SudokuPole.set('T');
+      after_move();
+
     }
   }
 
@@ -228,6 +233,8 @@ class MainGridState extends State<MainGrid> {
       _komorki[R][C] = SudokuPole.set('');
       C -= 1;
       _komorki[R][C] = SudokuPole.set('T');
+      after_move();
+
     }
   }
 }

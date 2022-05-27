@@ -15,6 +15,7 @@ class SudokuPole extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => SudokuPoleDynamic();
+
 }
 
 class SudokuPoleDynamic extends State<SudokuPole> {
