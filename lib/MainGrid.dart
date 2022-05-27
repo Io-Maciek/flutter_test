@@ -85,7 +85,7 @@ class MainGridState extends State<MainGrid> {
               children: _komorki.expand((element) => element).toList()));
 
       var text = Text(
-        '${temp}: $_swipeDirection',
+        '${temp}: $idRuchu',
         textAlign: TextAlign.center,
       ); //
 
@@ -117,114 +117,85 @@ class MainGridState extends State<MainGrid> {
           if (event.runtimeType == RawKeyDownEvent) {
             if (event.data.logicalKey == LogicalKeyboardKey.arrowLeft ||
                 event.data.logicalKey == LogicalKeyboardKey.keyA) {
-              if (pre == Orientation.landscape) {
-                move(Movement.gora);
-              } else {
-                // gdy pionowo to w prawo
-                move(Movement.prawo);
-              }
+              move(Movement.prawo);
             } else if (event.data.logicalKey == LogicalKeyboardKey.arrowRight ||
                 event.data.logicalKey == LogicalKeyboardKey.keyD) {
-              if (pre == Orientation.landscape) {
-                move(Movement.dol);
-              } else {
-                // gdy pionowo to w lewo
-                move(Movement.lewo);
-              }
+              move(Movement.lewo);
             } else if (event.data.logicalKey == LogicalKeyboardKey.arrowUp ||
                 event.data.logicalKey == LogicalKeyboardKey.keyW) {
-              if (pre == Orientation.landscape) {
-                move(Movement.prawo);
-              } else {
-                move(Movement.gora);
-              }
+              move(Movement.gora);
             } else if (event.data.logicalKey == LogicalKeyboardKey.arrowDown ||
                 event.data.logicalKey == LogicalKeyboardKey.keyS) {
-              if (pre == Orientation.landscape) {
-                move(Movement.lewo);
-              } else {
-                move(Movement.dol);
-              }
+              move(Movement.dol);
             }
           }
         },
         child: GestureDetector(
           onDoubleTap: zapisz,
-
-          // poruszanie horyzontalnie
           onHorizontalDragEnd: (d) {
-            // ruch w prawo
             if (d.velocity.pixelsPerSecond.dx < -250) {
-              // gdy poziomo to do góry
-              if (pre == Orientation.landscape) {
-                move(Movement.gora);
-              } else {
-                // gdy pionowo to w prawo
-                move(Movement.prawo);
-              }
-
-              // wypisanie na ekran ruchu
-              setState(() {
-                _swipeDirection = "prawo";
-              });
-
-              // ruch w lewo
+              move(Movement.prawo);
             } else if (d.velocity.pixelsPerSecond.dx > 250) {
-              // gdy poziomo to w dół
-              if (pre == Orientation.landscape) {
-                move(Movement.dol);
-              } else {
-                // gdy pionowo to w lewo
-                move(Movement.lewo);
-              }
-
-              setState(() {
-                _swipeDirection = "lewo";
-              });
+              move(Movement.lewo);
             }
           },
           onVerticalDragEnd: (d) {
             if (d.velocity.pixelsPerSecond.dy > -500) {
-              if (pre == Orientation.landscape) {
-                move(Movement.lewo);
-              } else {
-                move(Movement.dol);
-              }
-              setState(() {
-                _swipeDirection = "dół";
-              });
+              move(Movement.dol);
             } else if (d.velocity.pixelsPerSecond.dy < 500) {
-              if (pre == Orientation.landscape) {
-                move(Movement.prawo);
-              } else {
-                move(Movement.gora);
-              }
-
-              setState(() {
-                _swipeDirection = "góra";
-              });
+              move(Movement.gora);
             }
           },
           child: grid,
         ));
   }
 
+  int idRuchu = 0;
+
+  void after_move(){
+    idRuchu++;
+  }
+
   void move(Movement movement) {
     setState(() {
       switch (movement) {
         case Movement.gora:
-          _moveUp();
+          if (pre == Orientation.landscape) {
+            _moveRight();
+          } else {
+            _moveUp();
+          }
+
           break;
         case Movement.dol:
-          _moveDown();
+          if (pre == Orientation.landscape) {
+            _moveLeft();
+          } else {
+            _moveDown();
+          }
+
           break;
         case Movement.lewo:
-          _moveLeft();
+          if (pre == Orientation.landscape) {
+            _moveDown();
+          } else {
+            // gdy pionowo to w lewo
+            _moveLeft();
+          }
+
           break;
         case Movement.prawo:
-          _moveRight();
+          if (pre == Orientation.landscape) {
+            _moveUp();
+          } else {
+            // gdy pionowo to w prawo
+            _moveRight();
+          }
+
           break;
       }
+
+      after_move();
     });
   }
 
