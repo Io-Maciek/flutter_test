@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class SudokuPole extends StatefulWidget {
   String value = "";
+  int level = 0;
+
   SudokuPoleDynamic child = SudokuPoleDynamic();
 
   SudokuPole({Key? key}) : super(key: key) {
+    level=0;
+    valueSetInit();
+
     child = SudokuPoleDynamic();
   }
 
-  SudokuPole.set(String setValue, {Key? key}) : super(key: key) {
-    value = setValue;
+  SudokuPole.add({Key? key}) : super(key: key) {
+    level++;
+    valueSetInit();
+
     child = SudokuPoleDynamic();
   }
+
+  SudokuPole.set(int newLevel, {Key? key}) : super(key: key) {
+    level=newLevel;
+    valueSetInit();
+
+    child = SudokuPoleDynamic();
+  }
+
+
+  void valueSetInit(){
+    if(level == 0){
+      value = "";
+    }// else value equals to 2 to the power of level
+    else{
+      value = pow(2,level).toString();
+    }
+  }
+
+
 
   @override
   State<StatefulWidget> createState() => SudokuPoleDynamic();
@@ -19,6 +46,7 @@ class SudokuPole extends StatefulWidget {
 }
 
 class SudokuPoleDynamic extends State<SudokuPole> {
+
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [

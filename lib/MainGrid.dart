@@ -22,15 +22,15 @@ class MainGridState extends State<MainGrid> {
 
   Orientation presentOrientation = Orientation.landscape;
 
-  int R = 2;
-  int C = 2;
+  int R = 0;
+  int C = 0;
 
   MainGridState() {
     for (int i = 0; i < sudokuSize; i++) {
       var tempRow = <SudokuPole>[];
       for (int j = 0; j < sudokuSize; j++) {
-        if (i == R && j == C) {
-          tempRow.add(SudokuPole.set('T'));
+        if ((i == 3 && j == 0) || (i == 1 && j == 0)) {
+          tempRow.add(SudokuPole.add());
         } else {
           tempRow.add(SudokuPole());
         }
@@ -152,8 +152,19 @@ class MainGridState extends State<MainGrid> {
 
   int idRuchu = 0;
 
-  void after_move(){
+  void after_move() {
     idRuchu++;
+
+    bool isAdded = false;
+    while (!isAdded) {
+      var rnd = Random();
+      var rnd2 = rnd.nextInt(sudokuSize);
+      var rnd3 = rnd.nextInt(sudokuSize);
+      if (_komorki[rnd2][rnd3].level == 0) {
+        _komorki[rnd2][rnd3] = SudokuPole.add();
+        isAdded = true;
+      }
+    }
   }
 
   void move(Movement movement) {
@@ -194,47 +205,100 @@ class MainGridState extends State<MainGrid> {
 
           break;
       }
-
     });
   }
 
   void _moveUp() {
-    if (R > 0) {
-      _komorki[R][C] = SudokuPole.set('');
-      R -= 1;
-      _komorki[R][C] = SudokuPole.set('T');
-      after_move();
+    bool wykonalSieRuch = false;
 
+    // dodac wykrywanie kolizji
+
+    for (int i = 0; i < sudokuSize; i++) {
+      for (int j = 0; j < sudokuSize; j++) {
+        if (_komorki[i][j].level > 0) {
+          for (int d = 0; d < i; d++) { // tu nie moze isc od poczatku tylko od nastepnego i sprawdzac czy jest wolne i
+                                        // probowac isc dalej, jak nie to wrocic
+            if (_komorki[d][j].level == 0) {
+              _komorki[d][j] =
+                  SudokuPole.set(_komorki[i][j].level); //new position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+              break;
+            } else if (_komorki[d][j].level == _komorki[i][j].level) {
+              print('$i:$j dodawnie');
+              _komorki[d][j] =
+                  SudokuPole.set(_komorki[d][j].level + 1); //added position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+
+              break;
+            }
+
+          }
+        }
+      }
+    }
+
+    if (wykonalSieRuch) {
+      after_move();
     }
   }
 
   void _moveDown() {
-    if (R < sudokuSize - 1) {
-      _komorki[R][C] = SudokuPole.set('');
-      R += 1;
-      _komorki[R][C] = SudokuPole.set('T');
-      after_move();
+    bool wykonalSieRuch = false;
 
+    for (int i = sudokuSize - 1; i >= 0; i--) {
+
+      for (int j = 0; j < sudokuSize; j++) {
+        if (_komorki[i][j].level > 0) {
+
+          for (int d = sudokuSize-1; d >i; d--) {
+
+            if (_komorki[d][j].level == 0) {
+              print("hej!");
+
+              _komorki[d][j] =
+                  SudokuPole.set(_komorki[i][j].level); //new position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+              break;
+            }else if (_komorki[d][j].level == _komorki[i][j].level) {
+              print("hej!");
+
+              print('$i:$j dodawnie');
+              _komorki[d][j] =
+                  SudokuPole.set(_komorki[d][j].level + 1); //added position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+
+              break;
+            }
+
+          }
+        }
+      }
+    }
+
+    if (wykonalSieRuch) {
+      after_move();
     }
   }
 
   void _moveLeft() {
-    if (C < sudokuSize - 1) {
+/*    if (C < sudokuSize - 1) {
       _komorki[R][C] = SudokuPole.set('');
       C += 1;
       _komorki[R][C] = SudokuPole.set('T');
       after_move();
-
-    }
+    }*/
   }
 
   void _moveRight() {
-    if (C > 0) {
+/*    if (C > 0) {
       _komorki[R][C] = SudokuPole.set('');
       C -= 1;
       _komorki[R][C] = SudokuPole.set('T');
       after_move();
-
-    }
+    }*/
   }
 }
