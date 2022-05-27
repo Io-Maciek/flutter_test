@@ -213,28 +213,37 @@ class MainGridState extends State<MainGrid> {
 
     // dodac wykrywanie kolizji
 
-    for (int i = 0; i < sudokuSize; i++) {
+    for (int i = 1; i < sudokuSize; i++) {
       for (int j = 0; j < sudokuSize; j++) {
         if (_komorki[i][j].level > 0) {
-          for (int d = 0; d < i; d++) { // tu nie moze isc od poczatku tylko od nastepnego i sprawdzac czy jest wolne i
-                                        // probowac isc dalej, jak nie to wrocic
-            if (_komorki[d][j].level == 0) {
-              _komorki[d][j] =
-                  SudokuPole.set(_komorki[i][j].level); //new position
-              _komorki[i][j] = SudokuPole(); //previous that was moved
-              wykonalSieRuch = true;
-              break;
-            } else if (_komorki[d][j].level == _komorki[i][j].level) {
-              print('$i:$j dodawnie');
-              _komorki[d][j] =
-                  SudokuPole.set(_komorki[d][j].level + 1); //added position
-              _komorki[i][j] = SudokuPole(); //previous that was moved
-              wykonalSieRuch = true;
 
+          int saveIndex = sudokuSize;
+
+          for (int d = i-1; d >=0 ; d--) { // tu nie moze isc od poczatku tylko od nastepnego i sprawdzac czy jest wolne i
+                                        // probowac isc dalej, jak nie to wrocic
+            if (_komorki[d][j].level == 0 || _komorki[d][j].level == _komorki[i][j].level) {
+              saveIndex = d;
+            }else{
               break;
             }
 
           }
+
+          if(saveIndex!= sudokuSize){
+            if (_komorki[saveIndex][j].level == 0) {
+              _komorki[saveIndex][j] =
+                  SudokuPole.set(_komorki[i][j].level); //new position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            } else if (_komorki[saveIndex][j].level == _komorki[i][j].level) {
+              print('$i:$j dodawnie');
+              _komorki[saveIndex][j] =
+                  SudokuPole.set(_komorki[saveIndex][j].level + 1); //added position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            }
+          }
+
         }
       }
     }
@@ -247,33 +256,33 @@ class MainGridState extends State<MainGrid> {
   void _moveDown() {
     bool wykonalSieRuch = false;
 
-    for (int i = sudokuSize - 1; i >= 0; i--) {
-
-      for (int j = 0; j < sudokuSize; j++) {
+    for (int i = sudokuSize - 2; i >= 0; i--) {
+      for (int j = sudokuSize - 1; j >= 0; j--) {
         if (_komorki[i][j].level > 0) {
+          int saveIndex = -1;
 
-          for (int d = sudokuSize-1; d >i; d--) {
+          for (int d = i+1; d < sudokuSize; d++) {
 
-            if (_komorki[d][j].level == 0) {
-              print("hej!");
-
-              _komorki[d][j] =
-                  SudokuPole.set(_komorki[i][j].level); //new position
-              _komorki[i][j] = SudokuPole(); //previous that was moved
-              wykonalSieRuch = true;
-              break;
-            }else if (_komorki[d][j].level == _komorki[i][j].level) {
-              print("hej!");
-
-              print('$i:$j dodawnie');
-              _komorki[d][j] =
-                  SudokuPole.set(_komorki[d][j].level + 1); //added position
-              _komorki[i][j] = SudokuPole(); //previous that was moved
-              wykonalSieRuch = true;
-
+            if (_komorki[d][j].level == 0 || _komorki[d][j].level == _komorki[i][j].level) {
+              saveIndex = d;
+            }else{
               break;
             }
 
+          }
+          if(saveIndex!=-1){
+            if (_komorki[saveIndex][j].level == 0) {
+              _komorki[saveIndex][j] =
+                  SudokuPole.set(_komorki[i][j].level); //new position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            } else if (_komorki[saveIndex][j].level == _komorki[i][j].level) {
+              print('$i:$j dodawnie');
+              _komorki[saveIndex][j] =
+                  SudokuPole.set(_komorki[saveIndex][j].level + 1); //added position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            }
           }
         }
       }
