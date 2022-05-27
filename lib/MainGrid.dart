@@ -167,6 +167,8 @@ class MainGridState extends State<MainGrid> {
     }
   }
 
+  // TODO zablokować dodawanie po tym jak już poprzednio dwie się dodały (2-2-4  <- 4-4-0 a nie 8-0-0)
+
   void move(Movement movement) {
     setState(() {
       switch (movement) {
@@ -210,8 +212,6 @@ class MainGridState extends State<MainGrid> {
 
   void _moveUp() {
     bool wykonalSieRuch = false;
-
-    // dodac wykrywanie kolizji
 
     for (int i = 1; i < sudokuSize; i++) {
       for (int j = 0; j < sudokuSize; j++) {
@@ -293,21 +293,86 @@ class MainGridState extends State<MainGrid> {
     }
   }
 
-  void _moveLeft() {
-/*    if (C < sudokuSize - 1) {
-      _komorki[R][C] = SudokuPole.set('');
-      C += 1;
-      _komorki[R][C] = SudokuPole.set('T');
+  void _moveLeft() {    // S key
+    bool wykonalSieRuch = false;
+
+    for (int i = sudokuSize - 1; i >= 0; i--) {
+      for (int j = sudokuSize - 2; j >= 0; j--) {
+        if (_komorki[i][j].level > 0) {
+          int saveIndex = -1;
+
+          for (int d = j+1; d < sudokuSize; d++) {
+
+            if (_komorki[i][d].level == 0 || _komorki[i][d].level == _komorki[i][j].level) {
+              saveIndex = d;
+            }else{
+              break;
+            }
+
+          }
+          if(saveIndex!= -1){
+            if (_komorki[i][saveIndex].level == 0) {
+              _komorki[i][saveIndex] =
+                  SudokuPole.set(_komorki[i][j].level); //new position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            } else if (_komorki[i][saveIndex].level == _komorki[i][j].level) {
+              print('$i:$j dodawnie');
+              _komorki[i][saveIndex] =
+                  SudokuPole.set(_komorki[i][saveIndex].level + 1); //added position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            }
+          }
+        }
+      }
+    }
+
+    if (wykonalSieRuch) {
       after_move();
-    }*/
+    }
   }
 
-  void _moveRight() {
-/*    if (C > 0) {
-      _komorki[R][C] = SudokuPole.set('');
-      C -= 1;
-      _komorki[R][C] = SudokuPole.set('T');
+  void _moveRight() { // W key
+    bool wykonalSieRuch = false;
+
+    for (int i = 0; i < sudokuSize; i++) {
+      for (int j = 1; j < sudokuSize; j++) {
+        if (_komorki[i][j].level > 0) {
+
+          int saveIndex = sudokuSize;
+
+          for (int d = j-1; d >=0 ; d--) { // tu nie moze isc od poczatku tylko od nastepnego i sprawdzac czy jest wolne i
+            // probowac isc dalej, jak nie to wrocic
+            if (_komorki[i][d].level == 0 || _komorki[i][d].level == _komorki[i][j].level) {
+              saveIndex = d;
+            }else{
+              break;
+            }
+
+          }
+
+          if(saveIndex!= sudokuSize){
+            if (_komorki[i][saveIndex].level == 0) {
+              _komorki[i][saveIndex] =
+                  SudokuPole.set(_komorki[i][j].level); //new position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            } else if (_komorki[i][saveIndex].level == _komorki[i][j].level) {
+              print('$i:$j dodawnie');
+              _komorki[i][saveIndex] =
+                  SudokuPole.set(_komorki[i][saveIndex].level + 1); //added position
+              _komorki[i][j] = SudokuPole(); //previous that was moved
+              wykonalSieRuch = true;
+            }
+          }
+
+        }
+      }
+    }
+
+    if (wykonalSieRuch) {
       after_move();
-    }*/
+    }
   }
 }
