@@ -68,57 +68,59 @@ class MainGridState extends State<MainGrid> {
 
   @override
   Widget build(BuildContext context) {
-    var grid = OrientationBuilder(builder: (context, orientation) {
+    var main = OrientationBuilder(builder: (context, orientation) {
       _komorkiObrot(orientation);
-      var grid =LayoutBuilder(builder: (context, C){
+      var layout = Container( padding: EdgeInsets.all(10),
+        child: LayoutBuilder(builder: (context, C) {
         double szer = 0;
         double wys = 0;
 
-        if(orientation == Orientation.portrait){
+        if (orientation == Orientation.portrait) {
           szer = C.maxWidth;
           wys = C.maxWidth;
-        }else{
+        } else {
           szer = C.maxHeight;
           wys = C.maxHeight;
         }
 
         return Container(
-          decoration: BoxDecoration(
-              color: Colors.brown.shade800,
-              borderRadius: BorderRadius.circular(12.0),
+            decoration: BoxDecoration(
+              color: Colors.brown.shade500,
+              borderRadius: BorderRadius.circular(30.0),
               border: Border.all(
-                color: Colors.brown,
+                color: Colors.brown.shade500,
                 width: 2.0,
               ),
+            ),
+            height: szer,
+            width: wys,
+            child: GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                scrollDirection: orientation == Orientation.landscape
+                    ? Axis.horizontal
+                    : Axis.vertical,
+                padding: const EdgeInsets.all(20.0),
+                childAspectRatio: sudokuSize / sudokuSize,
+                mainAxisSpacing: 0.0,
+                crossAxisSpacing: 0.0,
+                crossAxisCount: sudokuSize,
+                children: _komorki.expand((element) => element).toList()));
+      }));
 
-          ),
-            height:szer,width: wys,
-        child: GridView.count(
-            physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: orientation == Orientation.landscape
-        ? Axis.horizontal
-            : Axis.vertical,
-        padding: const EdgeInsets.all(20.0),
-        childAspectRatio: sudokuSize / sudokuSize,
-        mainAxisSpacing: 0.0,
-        crossAxisSpacing: 0.0,
-        crossAxisCount: sudokuSize,
-        children: _komorki.expand((element) => element).toList()));
-      });
-
-      var text = Expanded(child:  Text(
+      var text = Expanded(
+          child: Text(
         '${temp}: $idRuchu',
         textAlign: TextAlign.center,
       )); //
 
       if (orientation == Orientation.portrait) {
         return Column(children: [
-          grid,
+          layout,
           text,
         ]);
       } else {
         return Row(children: [
-          grid,
+          layout,
           text,
         ]);
       }
@@ -168,7 +170,7 @@ class MainGridState extends State<MainGrid> {
               move(Movement.gora);
             }
           },
-          child: grid,
+          child: main,
         ));
   }
 
@@ -240,7 +242,6 @@ class MainGridState extends State<MainGrid> {
           int saveIndex = sudokuSize;
 
           for (int d = i - 1; d >= 0; d--) {
-
             if (_komorki[d][j].level == 0 ||
                 _komorki[d][j].level == _komorki[i][j].level &&
                     d != blockedIndex) {

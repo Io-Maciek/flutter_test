@@ -8,7 +8,7 @@ class SudokuPole extends StatefulWidget {
   SudokuPoleDynamic child = SudokuPoleDynamic();
 
   SudokuPole({Key? key}) : super(key: key) {
-    level=0;
+    level = 0;
     valueSetInit();
 
     child = SudokuPoleDynamic();
@@ -22,69 +22,76 @@ class SudokuPole extends StatefulWidget {
   }
 
   SudokuPole.set(int newLevel, {Key? key}) : super(key: key) {
-    level=newLevel;
+    level = newLevel;
     valueSetInit();
 
     child = SudokuPoleDynamic();
   }
 
-
-  void valueSetInit(){
-    if(level == 0){
+  void valueSetInit() {
+    if (level == 0) {
       value = "";
-    }// else value equals to 2 to the power of level
-    else{
-      value = pow(2,level).toString();
+    } // else value equals to 2 to the power of level
+    else {
+      value = pow(2, level).toString();
     }
   }
 
-
-
   @override
   State<StatefulWidget> createState() => SudokuPoleDynamic();
-
 }
 
 class SudokuPoleDynamic extends State<SudokuPole> {
-
   @override
   Widget build(BuildContext context) {
+    var bgColor = Colors.white.withOpacity(0.27);
 
-
-    var bgColor = Colors.white;
-
-    switch(widget.level){
+    switch (widget.level) {
+      case 0:
+        bgColor = Colors.white.withOpacity(0.27);
+        break;
       case 1:
         bgColor = Colors.orange.shade100;
         break;
       case 2:
-        bgColor = Colors.orange.shade400;
+        bgColor = Colors.orange.shade200;
         break;
       case 3:
         bgColor = Colors.orange.shade800;
         break;
       case 4:
-        bgColor = Colors.lightBlueAccent.shade200;
+        bgColor = Colors.redAccent;
         break;
       case 5:
-        bgColor = Colors.lightBlueAccent.shade400;
+        bgColor = Colors.pinkAccent;
+        break;
+      case 6:
+        bgColor = Colors.deepPurpleAccent;
+        break;
+      case 7:
+        bgColor = Colors.green;
+        break;
+      default:
+        bgColor = Colors.white70;
         break;
     }
 
-    return Container(padding: const EdgeInsets.all(5),
+    return Container(
+        padding: const EdgeInsets.all(5),
         child: Stack(alignment: Alignment.center, children: [
-      Container(
-        color : bgColor,
-
-
-      ),
-      Text(widget.value,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-              color: Colors.black,
-              fontSize: 21,
-              fontWeight: FontWeight.bold,
-              fontFamily: "ComicSans")),
-    ]));
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: bgColor,
+            ),
+          ),
+          Text(widget.value,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 21,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "ComicSans")),
+        ]));
   }
 }
