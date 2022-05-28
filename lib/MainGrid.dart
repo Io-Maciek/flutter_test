@@ -24,6 +24,8 @@ class MainGridState extends State<MainGrid> {
   Orientation presentOrientation = Orientation.landscape;
 
   // TODO początkowa orientacja pionowo nie widzi pierwszych dwójc pol idk co sie dzieje
+  //    nagle działa eeee COO
+  // TODO blokowanie działa chyba do góry so idk (góra i dół działa ....)
 
   MainGridState() {
     for (int i = 0; i < sudokuSize; i++) {
@@ -207,15 +209,15 @@ class MainGridState extends State<MainGrid> {
 
   void _moveUp() {
     bool wykonalSieRuch = false;
-    print("to jes to");
 
     for (int i = 1; i < sudokuSize; i++) {
-      int blockedIndex = -1;
+      int blockedIndex = sudokuSize;
       for (int j = 0; j < sudokuSize; j++) {
         if (_komorki[i][j].level > 0) {
           int saveIndex = sudokuSize;
 
           for (int d = i - 1; d >= 0; d--) {
+
             if (_komorki[d][j].level == 0 ||
                 _komorki[d][j].level == _komorki[i][j].level &&
                     d != blockedIndex) {
@@ -224,6 +226,7 @@ class MainGridState extends State<MainGrid> {
               break;
             }
           }
+          print("$saveIndex\t$blockedIndex");
 
           if (saveIndex != sudokuSize) {
             if (_komorki[saveIndex][j].level == 0) {
@@ -254,7 +257,7 @@ class MainGridState extends State<MainGrid> {
     bool wykonalSieRuch = false;
 
     for (int i = sudokuSize - 2; i >= 0; i--) {
-      int blockedIndex = -1;
+      int blockedIndex = sudokuSize;
       for (int j = sudokuSize - 1; j >= 0; j--) {
         if (_komorki[i][j].level > 0) {
           int saveIndex = -1;
@@ -268,6 +271,8 @@ class MainGridState extends State<MainGrid> {
               break;
             }
           }
+          print("$saveIndex\t$blockedIndex");
+
           if (saveIndex != -1) {
             if (_komorki[saveIndex][j].level == 0) {
               _komorki[saveIndex][j] =
