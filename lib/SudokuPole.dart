@@ -49,15 +49,34 @@ class SudokuPoleDynamic extends State<SudokuPole> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.center, children: [
+
+
+    var bgColor = Colors.white;
+
+    switch(widget.level){
+      case 1:
+        bgColor = Colors.orange.shade100;
+        break;
+      case 2:
+        bgColor = Colors.orange.shade400;
+        break;
+      case 3:
+        bgColor = Colors.orange.shade800;
+        break;
+      case 4:
+        bgColor = Colors.lightBlueAccent.shade200;
+        break;
+      case 5:
+        bgColor = Colors.lightBlueAccent.shade400;
+        break;
+    }
+
+    return Container(padding: const EdgeInsets.all(5),
+        child: Stack(alignment: Alignment.center, children: [
       Container(
-        decoration: BoxDecoration(
-            color: Colors.orange[200]?.withOpacity(widget.level/11.0),
-            borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(
-              color: Colors.black,
-              width: 2.0,
-            )),
+        color : bgColor,
+
+
       ),
       Text(widget.value,
           textAlign: TextAlign.center,
@@ -66,6 +85,6 @@ class SudokuPoleDynamic extends State<SudokuPole> {
               fontSize: 21,
               fontWeight: FontWeight.bold,
               fontFamily: "ComicSans")),
-    ]);
+    ]));
   }
 }
