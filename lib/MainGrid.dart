@@ -70,8 +70,8 @@ class MainGridState extends State<MainGrid> {
   Widget build(BuildContext context) {
     var grid = OrientationBuilder(builder: (context, orientation) {
       _komorkiObrot(orientation);
-      var grid = Expanded(
-          child: GridView.count(
+      var grid = Expanded(child:
+          GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: orientation == Orientation.landscape
                   ? Axis.horizontal
