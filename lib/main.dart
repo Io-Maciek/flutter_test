@@ -17,12 +17,18 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.orange[50],
         primarySwatch: Colors.yellow,
       ),
-      home: const MyHomePage(title: '2048'),
+      home: const MyHomePage(
+        title: '2048',
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_MyHomePageState>()?.restartApp();
+  }
+
   final String title;
 
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -32,18 +38,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
+    return KeyedSubtree(key: key,
+        child: Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        /*actions: [
+        actions: [
         TextButton(
             style: TextButton.styleFrom(primary: Theme.of(context).colorScheme.onPrimary),
-            onPressed: _incrementCounter,
-            child: const Text('Action 1')),
-      ]*/
+            onPressed: restartApp,
+            child: const Text('Restart')),
+      ]
       ),
       body: const MainGrid(),
       /* floatingActionButton: FloatingActionButton(
@@ -51,6 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
           tooltip: "Dodaj",
           child: const Icon(Icons.dangerous),
         )*/
-    );
+    ));
   }
 }

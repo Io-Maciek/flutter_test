@@ -4,19 +4,21 @@ import 'dart:math';
 class SudokuPole extends StatefulWidget {
   String value = "";
   int level = 0;
+  bool doAnimate= false;
 
   SudokuPoleDynamic child = SudokuPoleDynamic();
 
   SudokuPole({Key? key}) : super(key: key) {
     level = 0;
     valueSetInit();
-
+    doAnimate= false;
     child = SudokuPoleDynamic();
   }
 
   SudokuPole.add({Key? key}) : super(key: key) {
     level++;
     valueSetInit();
+    doAnimate = true;
 
     child = SudokuPoleDynamic();
   }
@@ -24,7 +26,7 @@ class SudokuPole extends StatefulWidget {
   SudokuPole.set(int newLevel, {Key? key}) : super(key: key) {
     level = newLevel;
     valueSetInit();
-
+    doAnimate= false;
     child = SudokuPoleDynamic();
   }
 
@@ -41,7 +43,27 @@ class SudokuPole extends StatefulWidget {
   State<StatefulWidget> createState() => SudokuPoleDynamic();
 }
 
-class SudokuPoleDynamic extends State<SudokuPole> {
+class SudokuPoleDynamic extends State<SudokuPole> with TickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 606),
+    vsync: this,
+  );
+
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.fastOutSlowIn,
+  );
+
+
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     var bgColor = Colors.white.withOpacity(0.27);
@@ -76,7 +98,7 @@ class SudokuPoleDynamic extends State<SudokuPole> {
         break;
     }
 
-    return Container(
+    Widget mainContainer =Container(
         padding: const EdgeInsets.all(5),
         child: Stack(alignment: Alignment.center, children: [
           Container(
@@ -93,5 +115,12 @@ class SudokuPoleDynamic extends State<SudokuPole> {
                   fontWeight: FontWeight.bold,
                   fontFamily: "ComicSans")),
         ]));
+
+    /*if(widget.doAnimate){
+      _controller.forward();
+      mainContainer = ScaleTransition(scale: _animation,child: mainContainer);
+    }*/
+
+    return mainContainer;
   }
 }

@@ -99,7 +99,7 @@ class MainGridState extends State<MainGrid> {
                 scrollDirection: orientation == Orientation.landscape
                     ? Axis.horizontal
                     : Axis.vertical,
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 childAspectRatio: sudokuSize / sudokuSize,
                 mainAxisSpacing: 0.0,
                 crossAxisSpacing: 0.0,
@@ -190,6 +190,7 @@ class MainGridState extends State<MainGrid> {
       }
     }
   }
+
 
   void move(Movement movement) {
     setState(() {
