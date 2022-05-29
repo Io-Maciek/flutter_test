@@ -4,15 +4,13 @@ import 'dart:math';
 class SudokuPole extends StatefulWidget {
   String value = "";
   int level = 0;
-  bool doAnimate= false;
+  bool doAnimate = true;
 
-  SudokuPoleDynamic child = SudokuPoleDynamic();
 
   SudokuPole({Key? key}) : super(key: key) {
     level = 0;
     valueSetInit();
-    doAnimate= false;
-    child = SudokuPoleDynamic();
+    //doAnimate = false;
   }
 
   SudokuPole.add({Key? key}) : super(key: key) {
@@ -20,14 +18,12 @@ class SudokuPole extends StatefulWidget {
     valueSetInit();
     doAnimate = true;
 
-    child = SudokuPoleDynamic();
   }
 
   SudokuPole.set(int newLevel, {Key? key}) : super(key: key) {
     level = newLevel;
     valueSetInit();
-    doAnimate= false;
-    child = SudokuPoleDynamic();
+    //doAnimate = false;
   }
 
   void valueSetInit() {
@@ -43,26 +39,32 @@ class SudokuPole extends StatefulWidget {
   State<StatefulWidget> createState() => SudokuPoleDynamic();
 }
 
-class SudokuPoleDynamic extends State<SudokuPole> with TickerProviderStateMixin {
+class SudokuPoleDynamic extends State<SudokuPole>
+    with TickerProviderStateMixin {
+
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 606),
     vsync: this,
   );
+
 
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
     curve: Curves.fastOutSlowIn,
   );
 
+ @override
+  void initState() {
+    super.initState();
 
+    _controller.forward();
+  }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +100,7 @@ class SudokuPoleDynamic extends State<SudokuPole> with TickerProviderStateMixin 
         break;
     }
 
-    Widget mainContainer =Container(
+    Widget mainContainer = Container(
         padding: const EdgeInsets.all(5),
         child: Stack(alignment: Alignment.center, children: [
           Container(
@@ -116,10 +118,11 @@ class SudokuPoleDynamic extends State<SudokuPole> with TickerProviderStateMixin 
                   fontFamily: "ComicSans")),
         ]));
 
-    /*if(widget.doAnimate){
+    if (widget.doAnimate) {
+      mainContainer = ScaleTransition(scale: _animation, child: mainContainer);
       _controller.forward();
-      mainContainer = ScaleTransition(scale: _animation,child: mainContainer);
-    }*/
+      print("\tanimacja!");
+    }
 
     return mainContainer;
   }

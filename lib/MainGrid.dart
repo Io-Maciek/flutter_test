@@ -23,8 +23,6 @@ class MainGridState extends State<MainGrid> {
 
   Orientation presentOrientation = Orientation.landscape;
 
-  // TODO początkowa orientacja pionowo nie widzi pierwszych dwójc pol idk co sie dzieje
-  //    nagle działa eeee COO
   // TODO blokowanie działa chyba do góry so idk (góra i dół działa ....)
 
   MainGridState() {
@@ -176,6 +174,8 @@ class MainGridState extends State<MainGrid> {
 
   int idRuchu = 0;
 
+  //todo: animacja nie wykonuje sięna polu gdzie juz kiedys animacja była (CHYBA??)
+
   void after_move() {
     idRuchu++;
 
@@ -185,8 +185,10 @@ class MainGridState extends State<MainGrid> {
       var rnd2 = rnd.nextInt(sudokuSize);
       var rnd3 = rnd.nextInt(sudokuSize);
       if (_komorki[rnd2][rnd3].level == 0) {
-        _komorki[rnd2][rnd3] = SudokuPole.add();
+        _komorki[rnd2].removeAt(rnd3);
+        _komorki[rnd2].insert(rnd3, SudokuPole.add());
         isAdded = true;
+        print("powinno animować: $rnd2, $rnd3");
       }
     }
   }
@@ -251,7 +253,6 @@ class MainGridState extends State<MainGrid> {
               break;
             }
           }
-          print("$saveIndex\t$blockedIndex");
 
           if (saveIndex != sudokuSize) {
             if (_komorki[saveIndex][j].level == 0) {
@@ -262,7 +263,6 @@ class MainGridState extends State<MainGrid> {
             } else if (_komorki[saveIndex][j].level == _komorki[i][j].level) {
               blockedIndex = saveIndex;
 
-              print('$i:$j dodawnie');
               _komorki[saveIndex][j] = SudokuPole.set(
                   _komorki[saveIndex][j].level + 1); //added position
               _komorki[i][j] = SudokuPole(); //previous that was moved
@@ -296,7 +296,6 @@ class MainGridState extends State<MainGrid> {
               break;
             }
           }
-          print("$saveIndex\t$blockedIndex");
 
           if (saveIndex != -1) {
             if (_komorki[saveIndex][j].level == 0) {
@@ -307,7 +306,6 @@ class MainGridState extends State<MainGrid> {
             } else if (_komorki[saveIndex][j].level == _komorki[i][j].level) {
               blockedIndex = saveIndex;
 
-              print('$i:$j dodawnie');
               _komorki[saveIndex][j] = SudokuPole.set(
                   _komorki[saveIndex][j].level + 1); //added position
               _komorki[i][j] = SudokuPole(); //previous that was moved
@@ -352,7 +350,6 @@ class MainGridState extends State<MainGrid> {
             } else if (_komorki[i][saveIndex].level == _komorki[i][j].level) {
               blockedIndex = saveIndex;
 
-              print('$i:$j dodawnie');
               _komorki[i][saveIndex] = SudokuPole.set(
                   _komorki[i][saveIndex].level + 1); //added position
               _komorki[i][j] = SudokuPole(); //previous that was moved
@@ -379,8 +376,6 @@ class MainGridState extends State<MainGrid> {
           int saveIndex = sudokuSize;
 
           for (int d = j - 1; d >= 0; d--) {
-            // tu nie moze isc od poczatku tylko od nastepnego i sprawdzac czy jest wolne i
-            // probowac isc dalej, jak nie to wrocic
             if (_komorki[i][d].level == 0 ||
                 _komorki[i][d].level == _komorki[i][j].level &&
                     d != blockedIndex) {
@@ -399,7 +394,6 @@ class MainGridState extends State<MainGrid> {
             } else if (_komorki[i][saveIndex].level == _komorki[i][j].level) {
               blockedIndex = saveIndex;
 
-              print('$i:$j dodawnie');
               _komorki[i][saveIndex] = SudokuPole.set(
                   _komorki[i][saveIndex].level + 1); //added position
               _komorki[i][j] = SudokuPole(); //previous that was moved
